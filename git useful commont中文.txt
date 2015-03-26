@@ -1,0 +1,128 @@
+git 常用指令
+==========================================
+			查询配置列表
+===========================================
+git config --global -l 或者 git config --global --list
+tip:
+(
+	--global 代表全局
+	--local 代表本地
+	--system 代表系统
+)
+类似会输出这样的信息,如果没配置过，可能也是没有的
+user.name=xxxxxxx
+user.email=xxxxxxxx
+........
+===========================================
+		新增/修改/删除，配置属性值
+===========================================
+新增/修改(user.address=here)
+git config --global user.address here
+tip:
+(
+	git config --global user.address here xxxx
+	here空格后会被忽略
+	相当于git config --global user.address here
+	如果想原样保留值可以加了双引号/单引号
+	git config --global user.address "here xxxx"
+	修改重新赋值就可以了，
+)
+git config --global --add user.address here
+
+--add追加属性，即它不会覆盖原有的属性，即会有两个相同的键
+//删除(如果只有一个键值，可以不用加上值，多个才会用于区分)
+git config --global --unset user.address abcdef
+===========================================
+		查询某个属性值
+	git config --global user.name
+===========================================
+		添加文件到暂存区
+===========================================
+			git add .
+	注：add后有一个点"."，会把所有的修改，添加的暂存区中，而不限制于当前目录
+	git add finame  
+	添加单个文件
+	清空暂存区：git reset HEAD [file]
+	不指定file将清空全部
+===========================================
+		commit 暂存区到仓库中
+	git commit -m "add other folder and in that add a txt file"
+	
+	(-m "备注信息，用于说明此次提交的内容"，一般都要写不写会不允许提示，
+	好像有参数可以不设置提交信息，最好都要写上)
+
+===========================================
+				版本回退
+将某个提交的过的版本，覆盖到本地工作区（以一个commit为单位的reset,每一个commit对应一个版本号）
+ 命令：git reset --hard HEAD^  或者 git reset --hard versionNum(版本号，可通过git log(最近三条)/git reflog(提交记录)看) 
+HEAD代表当前最近的版本，HEAD^代表当前版本的上一版本,HEAD^^代表当前版本的上上一版本,依次类推
+如果^太多，可以简写为HEAD~n,n代表当前版本的第前几个版本n从0开始，即0代表的是当前版本，依次类推
+总结：将commit过的版本覆盖到工作区中，而不是从暂存区中覆盖到本地
+			checkout（将最近修改恢复到工作区中，即覆盖到本地工作区）
+git checkout -- file
+从暂存区中或仓库中恢复，优先级 暂存区 > 仓库
+即，如果暂存区中没有才去仓库中查找。
+checkout的前提是文件有add commit 过，不然版本版本库中是没有的。
+===========================================
+克隆远程GitHub仓库到本地
+
+git  clone git@github.com:liufyi/learnGit.git
+
+或者
+
+git  clone  https://github.com/liufyi/learnGit.git
+
+"git@github.com:"后是用户名+仓库名 ->这种方式速度会比较快
+
+" https://github.com/liufyi/learnGit.git" ->相对前面的较慢，可以找GitHub上copy到这个url
+
+推送到GitHub
+
+ git push -u origin master
+
+由于远程库是空的，我们第一次推送master分支时，加上了-u参数，
+Git不但会把本地的master分支内容推送的远程新的master分支，
+还会把本地的master分支和远程的master分支关联起来，
+在以后的推送或者拉取时就可以简化命令。
+
+ git push  origin master
+
+ 关联GitHub
+
+ 要关联一个远程库，使用命令git remote add origin git@server-name:path/repo-name.git；
+关联后，使用命令git push -u origin master第一次推送master分支的所有内容；
+此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，
+也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！
+当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了！
+
+===============创建SSH Key=====================推送修改到GitHub必须
+第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，
+如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，
+如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），
+创建SSH Key：
+$ ssh-keygen -t rsa -C "youremail@example.com"
+你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，
+由于这个Key也不是用于军事目的，所以也无需设置密码。
+如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，
+这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面：
+然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容：
+========================================
+
+分支：
+======================================
+小结
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch <name>
+
+切换分支：git checkout <name>
+
+创建+切换分支：git checkout -b <name>
+
+合并某分支到当前分支：git merge <name>
+
+删除分支：git branch -d <name>
