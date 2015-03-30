@@ -96,6 +96,13 @@ Git不但会把本地的master分支内容推送的远程新的master分支，
 也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！
 当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了！
 
+从远程仓库更新本地分支：
+git pull origin <branch name> （取得origin的分支与当前分支合并）
+
+git pull origin <remote name> : <local name> （取得origin某分支与本地的某分支合并）
+
+===========================
+
 ===============创建SSH Key=====================推送修改到GitHub必须
 第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，
 如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，
@@ -119,9 +126,9 @@ Git鼓励大量使用分支：
 
 创建分支：git branch <name>
 
-切换分支：git checkout <name>
+切换分支：git checkout <name>   或 git checkout - （在两个分支间切换与alt + tab 切换窗口类似的功能）
 
-创建+切换分支：git checkout -b <name>
+创建分支：git checkout -b <name>
 
 合并某分支到当前分支：git merge <name>
 
@@ -159,8 +166,21 @@ git satsh
 恢复也是在dev下执行
 git stash apply恢复，但是恢复后，stash内容并不删除，
 
-你需要用git stash drop来删除；
+你需要用
+git stash drop来删除；
 
-另一种方式是用git stash pop，恢复的同时把stash内容也删了：
+另一种方式是用
+git stash pop，恢复的同时把stash内容也删了：
 
-git stash list查看stash
+git stash list
+查看stash
+================================
+ 多人协作
+ ================================
+ $ git remote
+origin
+或者，用git remote -v显示更详细的信息：
+
+$ git remote -v
+origin  git@github.com:michaelliao/learngit.git (fetch)    这是抓取地址
+origin  git@github.com:michaelliao/learngit.git (push)	   这是推送地址
